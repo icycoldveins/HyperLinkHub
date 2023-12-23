@@ -47,14 +47,14 @@ app.post('/links', async (req, res) => {
 // DELETE /links/:id endpoint to delete a link
 app.delete('/links/:id', async (req, res) => {
   try {
-    const link = await Link.findById(req.params.id);
-    if (link == null) {
+    const result = await Link.findByIdAndDelete(req.params.id);
+    if (result == null) {
       return res.status(404).json({ message: 'Cannot find link' });
     }
 
-    await link.remove();
     res.json({ message: 'Deleted link' });
   } catch (err) {
+    console.error(err); // Log the error message to the console
     return res.status(500).json({ message: err.message });
   }
 });

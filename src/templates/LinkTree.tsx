@@ -8,6 +8,7 @@ type Props = {
 };
 
 type LinkItem = {
+  _id: string;
   title: string;
   url: string;
 };
@@ -57,16 +58,26 @@ const LinkTree: React.FC<LinkTreeProps> = () => {
       });
 
       if (response.ok) {
+        const createdLink = await response.json();
         console.log('Link added successfully');
-        setLinks([...links, newLink]);
+        setLinks([...links, createdLink]);
       } else {
         console.error('Error adding link');
       }
     }
   };
 
-  const deleteLink = (index: number) => {
-    setLinks(links.filter((_, i) => i !== index));
+  const deleteLink = async (id: string) => {
+    const response = await fetch(`http://localhost:5000/links/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      console.log('Link deleted successfully');
+      setLinks(links.filter((link) => link._id !== id));
+    } else {
+      console.error('Error deleting link');
+    }
   };
 
   return (
@@ -78,7 +89,7 @@ const LinkTree: React.FC<LinkTreeProps> = () => {
         <div key={index} className="relative">
           <Button text={link.title} url={link.url} />
           <button 
-            onClick={() => deleteLink(index)} 
+            onClick={() => deleteLink(link._id)} 
             className="absolute top-1/2 right-3 transform -translate-y-1/2 bg-gray-500 text-white w-6 h-6 rounded-full"
             >
             -
@@ -96,4 +107,3 @@ const LinkTree: React.FC<LinkTreeProps> = () => {
 };
 
 export { LinkTree };
-
