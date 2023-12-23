@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NextLink from "next/link";
 import { Profile } from "../components/Profile";
 
@@ -30,14 +30,38 @@ const Button = ({ text, url }: Props) => {
   );
 };
 
-const LinkTree: React.FC<LinkTreeProps> = ({ links: initialLinks = [] }) => {
-  const [links, setLinks] = useState<LinkItem[]>(initialLinks);
+const LinkTree: React.FC<LinkTreeProps> = () => {
+  const [links, setLinks] = useState<LinkItem[]>([]);
 
-  const addLink = () => {
+  useEffect(() => {
+    const fetchLinks = async () => {
+      const response = await fetch('http://localhost:5000/links');
+      const links = await response.json();
+      setLinks(links);
+    };
+
+    fetchLinks();
+  }, []);
+
+  const addLink = async () => {
     const title = window.prompt("Enter link title");
     const url = window.prompt("Enter link URL");
     if (title && url) {
-      setLinks([...links, { title, url }]);
+      const newLink = { title, url };
+      const response = await fetch('http://localhost:5000/links', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newLink),
+      });
+
+      if (response.ok) {
+        console.log('Link added successfully');
+        setLinks([...links, newLink]);
+      } else {
+        console.error('Error adding link');
+      }
     }
   };
 

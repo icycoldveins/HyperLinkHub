@@ -1,7 +1,8 @@
+// Import necessary modules
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const Post = require("./models/post"); // Import your Post model at the top of your file
+const Link = require("./models/links"); // Import your Link model
 require("dotenv").config();
 
 const app = express();
@@ -20,20 +21,44 @@ mongoose
   .catch((err) => console.error("Could not connect to MongoDB", err));
 
 // Define routes
-// server.js
 
-// server.js
-
-const Link = require("./models/link"); // Import your Link model at the top of your file
-
-app.get("/api/links", async (req, res) => {
+// GET /links endpoint to fetch all links
+app.get('/links', async (req, res) => {
   try {
     const links = await Link.find();
     res.json(links);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
+
+// POST /links endpoint to add a new link
+app.post('/links', async (req, res) => {
+  const newLink = new Link(req.body);
+
+  try {
+    await newLink.save();
+    res.status(201).json(newLink);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// DELETE /links/:id endpoint to delete a link
+app.delete('/links/:id', async (req, res) => {
+  try {
+    const link = await Link.findById(req.params.id);
+    if (link == null) {
+      return res.status(404).json({ message: 'Cannot find link' });
+    }
+
+    await link.remove();
+    res.json({ message: 'Deleted link' });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
