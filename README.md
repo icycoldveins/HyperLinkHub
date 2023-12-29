@@ -1,7 +1,7 @@
 # HyperLink Hub
 
 HyperLink Hub is a web application built with JavaScript, Express, Next.js, React, MongoDB, TypeScript, and Node.js, designed to create a link aggregation platform that prioritizes intuitive navigation and efficient link management for an improved user experience.
-
+![Alt text](image-1.png)
 
 ### Features
 
