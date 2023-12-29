@@ -3,7 +3,7 @@ Sure, here's the updated README based on the provided description:
 # HyperLink Hub
 
 HyperLink Hub is a web application built with JavaScript, Express, Next.js, React, MongoDB, TypeScript, and Node.js, designed to create a link aggregation platform that prioritizes intuitive navigation and efficient link management for an improved user experience.
-
+![Alt text](image.png)
 ## Project Overview
 
 - Created a link aggregation platform to enhance user experience.
